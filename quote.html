@@ -1,0 +1,59 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Namma Painters | Get a Remote Quote</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:#f7f4ed;color:#172019}
+.wrap{max-width:980px;margin:auto;padding:28px 18px 70px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px}
+.logo{font-size:24px;font-weight:900}.logo b{color:#e86f3d}.back{font-weight:800}.hero{background:#172019;color:white;border-radius:26px;padding:42px;margin-bottom:20px}.hero h1{font-size:clamp(34px,6vw,60px);line-height:1;margin:0 0 14px;letter-spacing:-.05em}.hero p{color:#cbd2cc;max-width:650px}
+.card{background:#fff;border:1px solid #e5e0d6;border-radius:22px;padding:26px;margin:18px 0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}label{font-weight:800;font-size:14px;display:block;margin-bottom:7px}input,select,textarea{width:100%;padding:13px 14px;border:1px solid #d8d5cc;border-radius:11px;font:inherit;background:#fff}textarea{min-height:100px;resize:vertical}.full{grid-column:1/-1}
+.drop{border:2px dashed #d7d2c8;border-radius:17px;padding:28px;text-align:center;background:#fbfaf7;cursor:pointer}.drop:hover{border-color:#e86f3d}.drop strong{display:block;font-size:18px}.hint{font-size:13px;color:#717b73;margin-top:5px}
+.preview{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}.preview img{width:100%;height:120px;object-fit:cover;border-radius:10px}.check{display:flex;gap:9px;align-items:flex-start;font-size:14px}.check input{width:auto;margin-top:4px}.btn{width:100%;border:0;border-radius:12px;padding:15px;background:#e86f3d;color:#fff;font-weight:900;font-size:16px;cursor:pointer}.note{font-size:13px;color:#667068;margin-top:10px;text-align:center}.success{display:none;background:#e8f5ed;border:1px solid #b9dcc6;padding:20px;border-radius:16px}.success h2{margin:0 0 7px}.id{font-size:22px;font-weight:900;color:#2e5d4b}
+@media(max-width:650px){.grid{grid-template-columns:1fr}.full{grid-column:auto}.preview{grid-template-columns:repeat(2,1fr)}.top{align-items:flex-start}.hero{padding:30px 24px}}
+</style></head>
+<body><div class="wrap">
+<div class="top"><div class="logo">Namma <b>Painters</b></div><a class="back" href="/">← Home</a></div>
+<div class="hero"><h1>Get a painting quote without a site visit.</h1><p>Send us clear photos of your walls, rooms, exterior or woodwork. Add a few measurements and details. Our team will review everything and send you a quotation remotely.</p></div>
+
+<div class="card">
+<h2>Your details</h2><div class="grid">
+<div><label>Name *</label><input id="name" required></div><div><label>Phone / WhatsApp *</label><input id="phone" required></div>
+<div><label>Location / Area *</label><input id="location" placeholder="e.g. Whitefield, Bengaluru" required></div>
+<div><label>Property type</label><select id="property"><option>Apartment</option><option>Independent House</option><option>Villa</option><option>Office / Shop</option></select></div>
+</div></div>
+
+<div class="card"><h2>What do you need?</h2><div class="grid">
+<div><label>Service *</label><select id="service"><option>Interior Painting</option><option>Exterior Painting</option><option>Wood Polishing</option><option>Interior + Exterior Painting</option><option>Painting + Wood Polishing</option></select></div>
+<div><label>Approx. area</label><input id="area" placeholder="e.g. 1200 sq ft"></div>
+<div><label>Number of rooms</label><input id="rooms" type="number" min="1" placeholder="e.g. 3"></div>
+<div><label>Preferred start</label><input id="date" type="date"></div>
+<div class="full"><label>Additional details</label><textarea id="details" placeholder="Current wall condition, existing colour, cracks, dampness, number of doors/windows, preferred colour, etc."></textarea></div>
+</div></div>
+
+<div class="card"><h2>Upload photos</h2><p class="hint">Please upload wide photos of the complete area and close-ups of cracks, dampness, peeling paint or damaged wood. Up to 12 photos.</p>
+<label class="drop" for="photos"><strong>📷 Add photos</strong><span class="hint">Tap here to take photos on mobile or select photos from your device</span></label>
+<input id="photos" type="file" accept="image/*" multiple style="display:none">
+<div id="preview" class="preview"></div></div>
+
+<div class="card"><label class="check"><input id="consent" type="checkbox"> <span>I understand that this is a remote estimate based on the photos and information provided. Final pricing may change if actual site conditions differ materially.</span></label><br>
+<button class="btn" onclick="submitQuote()">Submit for Remote Quote →</button><div class="note">We’ll review your photos and contact you with the quotation.</div>
+</div>
+<div id="success" class="success"><h2>Request submitted ✓</h2><div>Your request ID is <span id="rid" class="id"></span></div><p>Please keep this ID. Our team can use it to identify your enquiry when contacting you.</p></div>
+</div>
+<script>
+const photos=document.getElementById('photos'), preview=document.getElementById('preview');
+photos.addEventListener('change',()=>{preview.innerHTML='';[...photos.files].slice(0,12).forEach(f=>{const i=document.createElement('img');i.src=URL.createObjectURL(f);preview.appendChild(i)})});
+async function submitQuote(){
+ if(!name.value.trim()||!phone.value.trim()||!location.value.trim()){alert('Please fill in your name, phone and location.');return}
+ if(!photos.files.length){alert('Please upload at least one photo.');return}
+ if(!consent.checked){alert('Please accept the remote-estimate note.');return}
+ if(photos.files.length>12){alert('Please upload a maximum of 12 photos.');return}
+ const fd=new FormData(); fd.append('name',name.value);fd.append('phone',phone.value);fd.append('location',location.value);
+ fd.append('property',property.value);fd.append('service',service.value);fd.append('area',area.value);fd.append('rooms',rooms.value);fd.append('date',date.value);fd.append('details',details.value);
+ [...photos.files].slice(0,12).forEach(f=>fd.append('photos',f));
+ try{
+  const r=await fetch('/api/requests',{method:'POST',body:fd}); const d=await r.json();
+  if(!r.ok)throw new Error(d.error||'Submission failed');
+  rid.textContent=d.id;document.getElementById('success').style.display='block';window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
+ }catch(e){alert('Could not submit right now. Please try again or contact Namma Painters directly.')}
+}
+</script></body></html>
